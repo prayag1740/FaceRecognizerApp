@@ -26,7 +26,7 @@ class SQS:
         }
         message_body=request_id
         
-        response = self.sqs.send_message(QueueUrl=request_sqs_url, DelaySeconds=10, MessageAttributes=message_attributes, 
+        response = self.sqs.send_message(QueueUrl=request_sqs_url, DelaySeconds=0, MessageAttributes=message_attributes, 
         MessageBody=message_body)
 
         return response
