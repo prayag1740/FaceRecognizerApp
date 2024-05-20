@@ -36,7 +36,7 @@ class SQS:
 
         while True:
             response = self.sqs.receive_message(QueueUrl=response_sqs_url, MessageAttributeNames=['All'], 
-            VisibilityTimeout=0, WaitTimeSeconds=10)
+            VisibilityTimeout=0, WaitTimeSeconds=15)
 
             messages = response.get('Messages', [])
 
