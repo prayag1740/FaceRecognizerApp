@@ -14,7 +14,7 @@ SECURITY_GROUP = ['sg-092d7173df0cd797b']
 REQUEST_SQS_URL = 'https://sqs.us-east-1.amazonaws.com/637423519415/1227975517-req-queue'
 
 user_data_script = '''#!/bin/bash  
-python3 /home/ec2-user/FaceRecognizerDL/face_recognition.py > logs.log
+python3 /home/ec2-user/FaceRecognizerDL/main.py > logs.log
 '''
 
 
