@@ -1,4 +1,4 @@
-import boto3, time, json
+import boto3, time, json, os
 
 ec2_client = boto3.client('ec2')
 sqs_client = boto3.client('sqs')
