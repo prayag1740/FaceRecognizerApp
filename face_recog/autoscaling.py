@@ -10,11 +10,17 @@ MAX_INSTANCES = 20
 SCALE_IN_THRESHOLD = 1
 SCALE_OUT_THRESHOLD = 3
 SECURITY_GROUP = ['sg-092d7173df0cd797b']
+AWS_ACCESS_KEY_ID=os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY=os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_DEFAULT_REGION="us-east-1"
 
 REQUEST_SQS_URL = 'https://sqs.us-east-1.amazonaws.com/637423519415/1227975517-req-queue'
 
 user_data_script = '''#!/bin/bash
-source /home/ec2-user/myenv/bin/activate  
+source /home/ec2-user/myenv/bin/activate
+export AWS_ACCESS_KEY_ID={AWS_ACCESS_KEY_ID}
+export AWS_SECRET_ACCESS_KEY={AWS_SECRET_ACCESS_KEY}
+export AWS_DEFAULT_REGION={AWS_DEFAULT_REGION}
 python3 /home/ec2-user/FaceRecognizerDL/main.py > logs.log
 '''
 
