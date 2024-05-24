@@ -3,7 +3,7 @@ import boto3, time, json
 ec2_client = boto3.client('ec2')
 sqs_client = boto3.client('sqs')
 
-AMI_ID = "ami-0b81f4988e1494c27"
+AMI_ID = "ami-018e5d9d0faa68d74"
 INSTANCE_TYPE= "t2.micro"
 MIN_INSTANCES = 0
 MAX_INSTANCES = 20
@@ -13,7 +13,8 @@ SECURITY_GROUP = ['sg-092d7173df0cd797b']
 
 REQUEST_SQS_URL = 'https://sqs.us-east-1.amazonaws.com/637423519415/1227975517-req-queue'
 
-user_data_script = '''#!/bin/bash  
+user_data_script = '''#!/bin/bash
+source /home/ec2-user/myenv/bin/activate  
 python3 /home/ec2-user/FaceRecognizerDL/main.py > logs.log
 '''
 
