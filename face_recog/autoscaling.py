@@ -24,6 +24,8 @@ export AWS_DEFAULT_REGION={AWS_DEFAULT_REGION}
 python3 /home/ec2-user/FaceRecognizerDL/main.py > logs.log
 '''
 
+IAM_ARN = 'arn:aws:iam::637423519415:instance-profile/S3SqSAccess'
+
 
 def get_queue_length():
 
@@ -40,6 +42,10 @@ def start_instance(instance_name):
         MaxCount=1,
         KeyName='prayag_ec2_keyPair4',
         UserData=user_data_script,
+        IamInstanceProfile={
+        'Arn': IAM_ARN,
+        'Name': 'S3SqSAccess'
+        },
         TagSpecifications=[
             {
                 'ResourceType': 'instance',
