@@ -44,7 +44,6 @@ def start_instance(instance_name):
         UserData=user_data_script,
         IamInstanceProfile={
         'Arn': IAM_ARN,
-        'Name': 'S3SqSAccess'
         },
         TagSpecifications=[
             {
