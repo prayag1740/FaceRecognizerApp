@@ -3,7 +3,7 @@ import boto3, time, json, os
 ec2_client = boto3.client('ec2')
 sqs_client = boto3.client('sqs')
 
-AMI_ID = "ami-0e5a803e3877f1972"
+AMI_ID = "ami-0599e7db0fcba3dfc"
 INSTANCE_TYPE= "t2.micro"
 MIN_INSTANCES = 0
 MAX_INSTANCES = 20
