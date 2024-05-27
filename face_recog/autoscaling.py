@@ -1,9 +1,10 @@
 import boto3, time, json, os
+import uuid
 
 ec2_client = boto3.client('ec2')
 sqs_client = boto3.client('sqs')
 
-AMI_ID = "ami-0599e7db0fcba3dfc"
+AMI_ID = "ami-076287d1469bb8049"
 INSTANCE_TYPE= "t2.micro"
 MIN_INSTANCES = 0
 MAX_INSTANCES = 20
@@ -16,13 +17,21 @@ AWS_DEFAULT_REGION="us-east-1"
 
 REQUEST_SQS_URL = 'https://sqs.us-east-1.amazonaws.com/637423519415/1227975517-req-queue'
 
-user_data_script = '''#!/bin/bash
-source /home/ec2-user/myenv/bin/activate
-export AWS_ACCESS_KEY_ID={AWS_ACCESS_KEY_ID}
-export AWS_SECRET_ACCESS_KEY={AWS_SECRET_ACCESS_KEY}
-export AWS_DEFAULT_REGION={AWS_DEFAULT_REGION}
-python3 /home/ec2-user/FaceRecognizerDL/main.py > logs.log
-'''
+
+def get_user_data_script(credentials):
+    aws_access_key_id = credentials['AccessKeyId']
+    aws_secret_access_key = credentials['SecretAccessKey']
+    session_token = credentials['SessionToken']
+    user_data_script = f'''#!/bin/bash
+    source /home/ec2-user/myenv/bin/activate
+    export AWS_ACCESS_KEY_ID={aws_access_key_id}
+    export AWS_SECRET_ACCESS_KEY={aws_secret_access_key}
+    export AWS_DEFAULT_REGION={AWS_DEFAULT_REGION}
+    export AWS_SESSION_TOKEN={session_token}
+    cd /home/ec2-user/FaceRecognizerDL/
+    python3 main.py > logs.log
+    '''
+    return user_data_script
 
 IAM_ARN = 'arn:aws:iam::637423519415:instance-profile/S3SqSAccess'
 
@@ -33,7 +42,9 @@ def get_queue_length():
     return int(response['Attributes']['ApproximateNumberOfMessages'])
 
 
-def start_instance(instance_name):
+def start_instance(instance_name, credentials):
+    user_data_script = get_user_data_script(credentials)
+    print(user_data_script)
     response = ec2_client.run_instances(
         ImageId=AMI_ID,
         InstanceType=INSTANCE_TYPE,
@@ -84,6 +95,20 @@ def get_instance_id_for_scale_in(instance_data):
     instance_id = instance_data['Instances'][0]['InstanceId']
     return instance_id
 
+def get_session_credentials():
+
+    session = boto3.Session(region_name='us-east-1')
+    sts_client = session.client('sts', region_name='us-east-1')
+
+    role_session_name = str(uuid.uuid4())[:10]
+    
+    assumed_role = sts_client.assume_role(
+        RoleArn='arn:aws:iam::637423519415:role/AmazonS3SqsAccessV2',
+        RoleSessionName=role_session_name
+    )
+
+    credentials = assumed_role['Credentials']
+    return credentials
 
  
 
@@ -102,7 +127,8 @@ def main():
             print("Starting instance for the first time")
             instance_count = str(running_instance_count+1)
             instance_name = f"app-tier-instance-{instance_count}"
-            instance_id = start_instance(instance_name)
+            credentials = get_session_credentials()
+            instance_id = start_instance(instance_name, credentials)
             print(f"instance with id {instance_id} started")
             time.sleep(30)
 
@@ -115,7 +141,8 @@ def main():
             print("Increasing instance count")
             instance_count = str(running_instance_count+1)
             instance_name = f"app-tier-instance-{instance_count}"
-            instance_id = start_instance(instance_name)
+            credentials = get_session_credentials()
+            instance_id = start_instance(instance_name, credentials)
             print(f"instance with id {instance_id} started")
 
         
