@@ -7,7 +7,7 @@ sqs_client = boto3.client('sqs')
 AMI_ID = "ami-076287d1469bb8049"
 INSTANCE_TYPE= "t2.micro"
 MIN_INSTANCES = 0
-MAX_INSTANCES = 15
+MAX_INSTANCES = 13
 SCALE_IN_THRESHOLD = 1
 SCALE_OUT_THRESHOLD = 3
 SECURITY_GROUP = ['sg-092d7173df0cd797b']
@@ -82,7 +82,7 @@ def get_running_instances():
         },
         {
             'Name' : 'instance-state-name',
-            'Values' : ['running']
+            'Values' : ['running', 'pending']
         }
     ])
     instance_data = response['Reservations']
