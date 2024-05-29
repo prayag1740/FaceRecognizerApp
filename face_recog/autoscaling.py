@@ -158,9 +158,9 @@ def main():
 
         print("*********************************************************************************")
         if running_instance_count == 0:
-            time.sleep(10)
+            time.sleep(4)
         else:        
-            time.sleep(25)
+            time.sleep(15)
 
 
 if __name__ == '__main__':
