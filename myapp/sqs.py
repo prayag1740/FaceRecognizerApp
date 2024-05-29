@@ -45,6 +45,26 @@ class SQS:
                 response = msg['MessageAttributes']['response']['StringValue']
                 if (request_id == message_request_id):
                     return response
+
+
+    def clear_sqs_queue(self, queue_name):
+
+        while True:
+        
+            response = self.sqs.receive_message(QueueUrl=queue_name, MessageAttributeNames=['All'], 
+            VisibilityTimeout=0, WaitTimeSeconds=15, MaxNumberOfMessages=10)
+            print(response)
+
+            messages = response.get('Messages', [])
+
+            if messages:
+                for msg in messages:
+                    self.sqs.delete_message(QueueUrl=queue_name, ReceiptHandle=msg['ReceiptHandle'])
+            else:
+                break
+
+
+
             
 
 
