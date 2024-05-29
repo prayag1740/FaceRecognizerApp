@@ -160,7 +160,7 @@ def main():
         if running_instance_count == 0:
             time.sleep(4)
         else:        
-            time.sleep(15)
+            time.sleep(7)
 
 
 if __name__ == '__main__':
