@@ -7,7 +7,7 @@ sqs_client = boto3.client('sqs')
 AMI_ID = "ami-076287d1469bb8049"
 INSTANCE_TYPE= "t2.micro"
 MIN_INSTANCES = 0
-MAX_INSTANCES = 20
+MAX_INSTANCES = 15
 SCALE_IN_THRESHOLD = 1
 SCALE_OUT_THRESHOLD = 3
 SECURITY_GROUP = ['sg-092d7173df0cd797b']
@@ -44,7 +44,6 @@ def get_queue_length():
 
 def start_instance(instance_name, credentials):
     user_data_script = get_user_data_script(credentials)
-    print(user_data_script)
     response = ec2_client.run_instances(
         ImageId=AMI_ID,
         InstanceType=INSTANCE_TYPE,
