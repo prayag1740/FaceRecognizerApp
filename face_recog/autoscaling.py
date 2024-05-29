@@ -130,7 +130,7 @@ def main():
             credentials = get_session_credentials()
             instance_id = start_instance(instance_name, credentials)
             print(f"instance with id {instance_id} started")
-            time.sleep(30)
+            time.sleep(25)
 
 
         running_instances = get_running_instances()
@@ -156,8 +156,11 @@ def main():
                 print(f"instance with id {stop_instance_id} stopped")
 
 
-        print("*********************************************************************************")        
-        time.sleep(30)
+        print("*********************************************************************************")
+        if running_instance_count == 0:
+            time.sleep(10)
+        else:        
+            time.sleep(25)
 
 
 if __name__ == '__main__':
